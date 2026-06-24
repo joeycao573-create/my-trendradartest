@@ -1,0 +1,79 @@
+TrendRadar 路径 A 部署清单（GitHub Actions）
+============================================
+
+本地已准备目录: c:\Users\HUAWEI\Desktop\test\TrendRadar
+已做优化: 关闭 AI 分析（无需 API Key）、简化关键词
+
+【第一步】创建你自己的 GitHub 仓库
+--------------------------------
+1. 打开 https://github.com/sansan0/TrendRadar
+2. 点击绿色按钮 "Use this template"（不要用 Fork）
+3. 仓库名建议: TrendRadar（或任意名称）
+4. 选择 Public，点击 Create repository
+
+【第二步】上传代码到你的仓库
+--------------------------------
+方式 A（推荐，需先安装 Git）:
+  cd c:\Users\HUAWEI\Desktop\test\TrendRadar
+  git init
+  git add .
+  git commit -m "init trendradar practice"
+  git branch -M master
+  git remote add origin https://github.com/你的用户名/你的仓库名.git
+  git push -u origin master
+
+方式 B（无 Git，网页上传）:
+  1. 进入你新建的仓库页面
+  2. Add file -> Upload files
+  3. 把 c:\Users\HUAWEI\Desktop\test\TrendRadar 下所有文件拖进去
+  4. Commit changes
+
+【第三步】配置 GitHub Secrets（推送渠道，至少配一个）
+--------------------------------
+进入: 你的仓库 -> Settings -> Secrets and variables -> Actions -> New repository secret
+
+--- 方案 1: 企业微信（最简单）---
+Name:  WEWORK_WEBHOOK_URL
+Value: 企业微信群机器人的 Webhook 地址
+
+--- 方案 2: 飞书 ---
+Name:  FEISHU_WEBHOOK_URL
+Value: 飞书群自定义机器人 Webhook
+
+--- 方案 3: ntfy 手机推送（免费，无需注册）---
+1. 手机安装 ntfy App
+2. 订阅主题，例如: trendradar-yourname-8492（不要用中文）
+3. 添加 Secret:
+   Name:  NTFY_TOPIC
+   Value: 你订阅的主题名
+
+⚠️ Secret 名称必须完全一致，不能自创！
+
+【第四步】手动测试运行
+--------------------------------
+1. 进入仓库 -> Actions 标签页
+2. 左侧选择 "Get Hot News"
+3. 点击右侧 "Run workflow" -> Run workflow
+4. 刷新页面，等待约 2-5 分钟
+5. 检查手机/飞书/企业微信是否收到推送
+
+【第五步】每 7 天签到续期
+--------------------------------
+Actions -> "Check In" -> Run workflow
+不签到会在 7 天后自动停止定时任务
+
+【可选】配置云存储（增量模式、历史追踪）
+--------------------------------
+不配也能用，但是轻量模式。完整体验需配置 4 个 Secret:
+  S3_BUCKET_NAME
+  S3_ACCESS_KEY_ID
+  S3_SECRET_ACCESS_KEY
+  S3_ENDPOINT_URL
+推荐 Cloudflare R2 免费额度
+
+【可选】开启 AI 分析
+--------------------------------
+添加 Secret:
+  AI_API_KEY = 你的 DeepSeek/OpenAI Key
+  AI_ANALYSIS_ENABLED = true
+然后把 config/config.yaml 里 ai_analysis.enabled 改为 true
